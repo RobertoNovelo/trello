@@ -1,0 +1,160 @@
+body {
+	box-sizing: border-box;
+  	margin: 0 auto;
+  	padding: 0;
+  	text-align: center;
+	font-family: 'Roboto', sans-serif;
+  	font-size: 16px;
+  	color: #333;
+  	position: relative;
+  	border: none;
+}
+*:focus{
+	outline: none;
+}
+#header{
+	background-color: #438299;
+	color: #fff;
+	padding: .75rem 0;
+	font-size: 1.25rem;
+}
+.wrapper{
+	background-image: url("../src/images/corkboard.jpg");
+	height: calc(100vh - 3rem);
+	width: 100vw;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+}
+.column-header{
+	background-color: #42ccad;
+	height: 2rem;
+	margin-bottom: 1.5rem;
+	position: relative;
+}
+.column-header p{
+	margin: 0;
+}
+.header-title{
+	padding-top: .45rem;
+}
+.delete{
+	padding: .2rem .5rem;
+	padding-top: .15rem;
+	border-radius: 50%;
+	position: absolute;
+	top: .25rem;
+	right: 1rem;
+}
+.delete:hover{
+	color: #fff;
+}
+.add-card, .add-list{
+	background-color: #be2ec9;
+	color: #fff;
+	padding: .5rem 1rem .75rem 1rem;
+	border-radius: 50%;
+	font-size: 1.25rem;
+	border: none;
+}
+.add-card:hover, .add-list:hover, .new-note-submit:hover{
+	background-color: #d84be3;
+}
+.column{
+	width: 14rem;
+	height: calc(100vh - 4rem);
+	padding: 0 .75rem;
+	margin-top: 1rem;
+	border-right: 3px dashed #42ccad;
+	overflow: auto;
+}
+
+/*sticky note styling*/
+.note-container {
+	position: relative;
+	margin-bottom: 2rem;
+}
+.note {
+	position: relative;
+	width: 10rem;
+	height: 9rem;
+	margin: 0 auto;
+	padding: .75rem;
+	padding-top: 1rem;
+	font-size: 1rem;
+	line-height: 1.35rem;
+	font-family: 'Neucha', cursive;
+	box-shadow: 0 3px 5px 0px rgba(0,0,0,0.2);
+	overflow: auto;
+}
+.yellow {
+	background: #fff7a4;
+}
+.pin {
+	background-color: #aaa;
+	display: block;
+	height: 12px;
+	width: 2px;
+	position: absolute;
+	left: 50%;
+	top: 1px;
+	z-index: 1;
+}
+.pin:after {
+	background-color: #fff;
+	border-radius: 50%;
+	box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.1),
+	          inset 3px 3px 3px hsla(0,0%,100%,.2),
+	          inset -3px -3px 3px hsla(0,0%,0%,.2);
+	content: '';
+	height: 12px;
+	left: -5px;
+	position: absolute;
+	top: -10px;
+	width: 12px;
+}
+
+.add-card-modal{
+	display: none;
+}
+.modal{
+	background-color: rgba(255, 255, 255, .6);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 999;
+}
+.note-card-selection{
+	margin: 0 auto;
+	background-color: #fff;
+	height: 29rem;
+	width: 27rem;
+	margin-top: 11em;
+	box-shadow: 0 3px 5px 0px rgba(0,0,0,0.2);
+}
+.note-input{
+	border: none;
+	overflow: auto;
+	resize: none;
+	height: 18rem;
+	width: 19rem;
+	line-height: 3rem;
+	margin-top: 2rem;
+}
+.note-input[placeholder]{
+	font-size: 1.5rem;
+	text-align: left;
+}
+.new-note-submit{
+	background-color: #be2ec9;
+	color: #fff;
+	border-radius: .25rem;
+	font-size: 1rem;
+	width: 9rem;
+	padding: .5rem 1rem;
+	margin: 2rem 1rem;
+	border: none;
+}
+
+
+
