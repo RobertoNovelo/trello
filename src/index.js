@@ -3,33 +3,86 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 const ListDashboard = React.createClass({ 
-	render: function () {
+	getInitialState: function(){
 		return(
-			/*<div className="column">
-				<EditableNoteList />
-          		<ToggleableNoteForm
-					isOpen={true} 
+			{
+				lists: [
+			  		{
+			  			title: 'To Do',
+			    		cards: [
+			      			{text: 'do something'},
+			      			{text: 'do something else'}
+			    		]
+			    	},
+			    	{
+				    	title: 'In Progress',
+			    		cards: [
+			      			{text: 'doing something'}
+			    		]
+			    	}	
+			  	],
+			  	formOpen: false
+			}
+		);
+	},
+	toggleForm: function(){
+		this.setState({formOpen: !this.state.formOpen});
+	},
+	addNote: function(noteText){
+		this.toggleForm();
+		const lists = this.state.lists;
+		lists[0].cards.push({text: noteText});
+		this.setState({lists: lists});
+	},
+	render: function () {
+		const lists = this.state.lists.map((list, i) => {
+			return(
+				<List 
+					key={"list-" + i}
+					title={list.title}
+					cards={list.cards}
+					onForm={this.toggleForm}
 				/>
-			</div>*/
+			);
+		});
+		let noteForm;
+		if (this.state.formOpen) {
+		  	noteForm = <NoteForm onForm={this.toggleForm} onAdd={this.addNote}/>;
+		} else {
+		  	noteForm = "";
+		}
+		return(
 			<div className="wrapper">
-				<List />
-				<List />
-				<List />
+				{lists}
+				{noteForm}
 			</div>
 		);
 	}
 });
 
 const List = React.createClass({ 
+	toggleForm: function(){
+		this.props.onForm();
+	},
 	render: function () {
+		const notes = this.props.cards.map((card, i) => {
+			return(
+				<Note 
+					key={"note-" + i}
+					text={card.text}
+				/>
+			);
+		});
 		return(
 			<div className="column">
 	            <div className="column-header">
-	                <p className="header-title">TO DO</p>
+	                <p className="header-title">
+						{this.props.title}
+	                </p>
 	                <p className="delete">x</p>
 	            </div>
-	            <Note />
-	            <button className="add-card">+</button>
+	            {notes}
+	            <button className="add-card" onClick={this.toggleForm}>+</button>
 	        </div>
 		);
 	}
@@ -41,7 +94,7 @@ const Note = React.createClass({
 			<div className="note-container">
 			    <i className="pin"></i>
 			    <p className="note yellow">
-			        We can't solve problems by using the same kind of thinking we used when we created them.
+					{this.props.text}
 			    </p>
 			</div>
 		);
@@ -49,9 +102,27 @@ const Note = React.createClass({
 });
 
 const NoteForm = React.createClass({ 
+	toggleForm: function(){
+		this.props.onForm();
+	},
+	addNote: function(){
+		console.log(this.refs.noteText.value);
+		this.props.onAdd(this.refs.noteText.value);
+	},
 	render: function () {
-		//modal form
-	}
+		return(
+			//modal form
+			<div className="add-card-modal modal">
+		        <div className="card-selection">
+		            <div className="note-card-selection">
+		                <textarea ref="noteText" className="note-input note yellow" type="text" placeholder="Enter note text here"></textarea> 
+		                <button className="new-note-submit cancel" onClick={this.toggleForm}>Cancel</button>
+		                <button className="new-note-submit add" onClick={this.addNote}>Add Note</button>
+		            </div>
+		        </div>
+		    </div>
+		);
+	},
 });
 
 
