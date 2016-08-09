@@ -31,17 +31,22 @@ const ListDashboard = React.createClass({
 	addNote: function(noteText){
 		this.toggleForm();
 		const lists = this.state.lists;
-		lists[0].cards.push({text: noteText});
+		lists[this.state.currentList].cards.push({text: noteText});
 		this.setState({lists: lists});
+	},
+	addNoteForm: function(list){
+		this.toggleForm();
+		this.setState({currentList: list});
 	},
 	render: function () {
 		const lists = this.state.lists.map((list, i) => {
 			return(
 				<List 
 					key={"list-" + i}
+					index={i}
 					title={list.title}
 					cards={list.cards}
-					onForm={this.toggleForm}
+					onForm={this.addNoteForm}
 				/>
 			);
 		});
@@ -62,7 +67,7 @@ const ListDashboard = React.createClass({
 
 const List = React.createClass({ 
 	toggleForm: function(){
-		this.props.onForm();
+		this.props.onForm(this.props.index);
 	},
 	render: function () {
 		const notes = this.props.cards.map((card, i) => {
