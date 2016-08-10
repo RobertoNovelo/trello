@@ -8,25 +8,39 @@ const ListDashboard = React.createClass({
 			{
 				lists: [
 			  		{
-			  			title: 'To Do',
+			  			title: 'TO DO',
 			    		cards: [
-			      			{text: 'do something'},
-			      			{text: 'do something else'}
+			      			{text: 'Walk the dog'},
+			      			{text: 'Pick up dry cleaning'}
 			    		]
 			    	},
 			    	{
-				    	title: 'In Progress',
+				    	title: 'IN PROGRESS',
 			    		cards: [
-			      			{text: 'doing something'}
+			      			{text: 'Laundry'}
 			    		]
 			    	}	
 			  	],
-			  	formOpen: false
+			  	formOpen: false,
+			  	listFormOpen: false,
+			  	editFormOpen: false
 			}
 		);
 	},
 	toggleForm: function(){
 		this.setState({formOpen: !this.state.formOpen});
+	},
+	toggleListForm: function(){
+		this.setState({listFormOpen: !this.state.listFormOpen});
+	},
+	toggleEditForm: function(){
+		this.setState({editFormOpen: !this.state.editFormOpen});
+	},
+	addList: function(listTitle){
+		this.toggleListForm();
+		const lists = this.state.lists;
+		lists.push({title: listTitle, cards: []});
+		this.setState({lists: lists});
 	},
 	addNote: function(noteText){
 		this.toggleForm();
@@ -34,9 +48,19 @@ const ListDashboard = React.createClass({
 		lists[this.state.currentList].cards.push({text: noteText});
 		this.setState({lists: lists});
 	},
+	editNote: function(noteText){
+		this.toggleEditForm();
+		const lists = this.state.lists;
+		lists[this.state.currentList].cards[this.state.currentCard].text=noteText;
+		this.setState({lists: lists});
+	},
 	addNoteForm: function(list){
 		this.toggleForm();
 		this.setState({currentList: list});
+	},
+	editNoteForm: function(list, card, text){
+		this.toggleEditForm();
+		this.setState({currentList: list, currentCard: card, currentText: text});
 	},
 	render: function () {
 		const lists = this.state.lists.map((list, i) => {
@@ -47,19 +71,38 @@ const ListDashboard = React.createClass({
 					title={list.title}
 					cards={list.cards}
 					onForm={this.addNoteForm}
+					onEditForm={this.editNoteForm}
 				/>
 			);
 		});
-		let noteForm;
+		let noteForm, listForm, editForm;
 		if (this.state.formOpen) {
 		  	noteForm = <NoteForm onForm={this.toggleForm} onAdd={this.addNote}/>;
 		} else {
 		  	noteForm = "";
 		}
+		if (this.state.listFormOpen) {
+		  	listForm = <ListForm onForm={this.toggleListForm} onAdd={this.addList}/>;
+		} else {
+		  	listForm = "";
+		}
+		if (this.state.editFormOpen) {
+		  	editForm = <EditNoteForm onForm={this.toggleEditForm} onAdd={this.editNote}/>;
+		} else {
+		  	editForm = "";
+		}
 		return(
 			<div className="wrapper">
 				{lists}
+				<div className="column">
+				    <div className="column-header">
+				        <p className="header-title">ADD LIST</p>
+				    </div>
+				    <button className="add-list" onClick={this.toggleListForm}>+</button>
+				</div>
 				{noteForm}
+				{listForm}
+				{editForm}
 			</div>
 		);
 	}
@@ -68,6 +111,15 @@ const ListDashboard = React.createClass({
 const List = React.createClass({ 
 	toggleForm: function(){
 		this.props.onForm(this.props.index);
+	},
+	toggleListForm: function(){
+		this.props.onForm(this.props.index);
+	},
+	addList: function(listTitle){
+		toggleListForm();
+		const lists = this.state.lists;
+		lists.push({text: listTitle});
+		this.setState({lists: lists});
 	},
 	render: function () {
 		const notes = this.props.cards.map((card, i) => {
@@ -84,7 +136,7 @@ const List = React.createClass({
 	                <p className="header-title">
 						{this.props.title}
 	                </p>
-	                <p className="delete">x</p>
+	                <p className="delete" onClick={this.deleteList}>x</p>
 	            </div>
 	            {notes}
 	            <button className="add-card" onClick={this.toggleForm}>+</button>
@@ -111,12 +163,11 @@ const NoteForm = React.createClass({
 		this.props.onForm();
 	},
 	addNote: function(){
-		console.log(this.refs.noteText.value);
 		this.props.onAdd(this.refs.noteText.value);
 	},
 	render: function () {
 		return(
-			//modal form
+			//add note modal form
 			<div className="add-card-modal modal">
 		        <div className="card-selection">
 		            <div className="note-card-selection">
@@ -126,6 +177,54 @@ const NoteForm = React.createClass({
 		            </div>
 		        </div>
 		    </div>
+		);
+	},
+});
+
+const ListForm = React.createClass({ 
+	toggleListForm: function(){
+		this.props.onForm();
+	},
+	addList: function(){
+		this.props.onAdd(this.refs.listTitle.value);
+	},
+	render: function () {
+		return(
+			//add list modal form
+			<div className="add-list-modal modal">
+			    <div className="list-selection">
+			        <div className="note-list-selection">
+			            <input ref="listTitle" className="new-list" type="text" placeholder="List Title" />
+			            <button className="new-list-submit cancel" onClick={this.toggleListForm}>Cancel</button>
+			            <button className="new-list-submit add" onClick={this.addList}>Add List</button>
+			        </div>
+			    </div>
+			</div>
+		);
+	},
+});
+
+const EditNoteForm = React.createClass({ 
+	toggleEditForm: function(){
+		this.props.onForm();
+	},
+	addNote: function(){
+		console.log(this.refs.noteText.value);
+		this.props.onAdd(this.refs.noteText.value);
+	},
+	render: function () {
+		return(
+			//edit note modal form
+			<div className="edit-card-modal modal">
+			    <div className="card-selection">
+			        <div className="note-card-selection">
+			            <textarea className="note-input note yellow" type="text" autofocus></textarea> 
+			            <button className="edit-note-submit cancel">Cancel</button>
+			            <button className="edit-note-submit delete-button">Delete</button>
+			            <button className="edit-note-submit submit">Submit</button>
+			        </div>
+			    </div>
+			</div>
 		);
 	},
 });
