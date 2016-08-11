@@ -42,6 +42,16 @@ const ListDashboard = React.createClass({
 		lists.push({title: listTitle, cards: []});
 		this.setState({lists: lists});
 	},
+	editListName: function(listTitle){
+		this.toggleListForm();
+		const lists = this.state.lists;
+		//do I still need to have an empty cards array if i'm not adding a new list?
+		lists.text({title: listTitle});
+		this.setState({lists: lists});
+	},
+	// deleteList: function(listId){
+	// 	this.setState({lists: this.state.lists.filter(l => l.id !== listId)});
+	// },
 	addNote: function(noteText){
 		this.toggleForm();
 		const lists = this.state.lists;
@@ -72,6 +82,7 @@ const ListDashboard = React.createClass({
 					cards={list.cards}
 					onForm={this.addNoteForm}
 					onEditForm={this.editNoteForm}
+					// onDelete={this.deleteList}
 				/>
 			);
 		});
@@ -121,6 +132,19 @@ const List = React.createClass({
 		lists.push({text: listTitle});
 		this.setState({lists: lists});
 	},
+	editListName: function(listTitle){
+		toggleListForm();
+		const lists = this.state.lists;
+		//do I still need to have an empty cards array if i'm not adding a new list?
+		lists.text({title: listTitle});
+		this.setState({lists: lists});
+	},
+	// deleteList: function(listId){
+	// 	const lists = this.state.lists;
+	// 	this.setState({
+	// 		lists: lists.filter(_, l => l !== listId)
+	// 	});
+	// },
 	render: function () {
 		const notes = this.props.cards.map((card, i) => {
 			return(
@@ -132,7 +156,7 @@ const List = React.createClass({
 		});
 		return(
 			<div className="column">
-	            <div className="column-header">
+	            <div className="column-header" onClick={this.toggleListForm}>
 	                <p className="header-title">
 						{this.props.title}
 	                </p>
@@ -189,6 +213,7 @@ const ListForm = React.createClass({
 		this.props.onAdd(this.refs.listTitle.value);
 	},
 	render: function () {
+		//can i do an if statement here to toggle the list form with either submit or add?
 		return(
 			//add list modal form
 			<div className="add-list-modal modal">
@@ -197,6 +222,7 @@ const ListForm = React.createClass({
 			            <input ref="listTitle" className="new-list" type="text" placeholder="List Title" />
 			            <button className="new-list-submit cancel" onClick={this.toggleListForm}>Cancel</button>
 			            <button className="new-list-submit add" onClick={this.addList}>Add List</button>
+			            <button className="new-list-submit submit" onClick={this.editListName}>Submit</button>
 			        </div>
 			    </div>
 			</div>
@@ -218,10 +244,10 @@ const EditNoteForm = React.createClass({
 			<div className="edit-card-modal modal">
 			    <div className="card-selection">
 			        <div className="note-card-selection">
-			            <textarea className="note-input note yellow" type="text" autofocus></textarea> 
+			            <textarea className="note-input note yellow" type="text"></textarea> 
 			            <button className="edit-note-submit cancel">Cancel</button>
 			            <button className="edit-note-submit delete-button">Delete</button>
-			            <button className="edit-note-submit submit">Submit</button>
+			           	<button className="edit-note-submit submit">Submit</button>
 			        </div>
 			    </div>
 			</div>
