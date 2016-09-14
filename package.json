@@ -1,5 +1,6 @@
 {
   "name": "trello",
+  "homepage": "http://KelseaA.github.io/trello",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
